@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Clientes - Página de Inicio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <div class="container mx-auto px-4 py-6">
+        <!-- Sección de bienvenida -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+            <h1 class="text-3xl font-semibold text-gray-800 mb-4">¡Bienvenido al Gestor de Clientes!</h1>
+            <a href="{% url 'salir' %}" class="inline-block px-6 py-3 bg-red-500 text-white rounded-lg text-lg font-semibold hover:bg-red-600 transition">Cerrar sesión</a>
+        </div>
+
+        <!-- Botón para abrir el modal -->
+        <div class="mb-6">
+            <button id="openModalBtn" class="px-6 py-3 bg-green-500 text-white rounded-lg text-lg font-semibold hover:bg-green-600 transition">Agregar Nuevo Cliente</button>
+        </div>
+
+        <!-- Sección de lista de clientes -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b-2 pb-4 mb-6">Lista de Clientes</h2>
+            <ul>
+                {% for cliente in clientes %}
+                    <li class="bg-gray-50 p-4 mb-4 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105">
+                        <a href="{% url 'detalle_cliente' cliente.id %}" class="text-blue-600 hover:underline">
+                            {{ cliente.cliapeuno }} {{ cliente.clinomuno }}
+                        </a>
+                        <p class="text-gray-600"><strong>Cédula:</strong> {{ cliente.cliced_a }}</p>
+                        <p class="text-gray-600"><strong>Teléfono:</strong>
+                            {% if cliente.telt != '0' and cliente.cel1 != '0' %}
+                                {{ cliente.telt }} {{ cliente.cel1 }}
+                            {% elif cliente.telt != '0' %}
+                                {{ cliente.telt }}
+                            {% elif cliente.cel1 != '0' %}
+                                {{ cliente.cel1 }}
+                            {% else %}
+                                No disponible
+                            {% endif %}
+                        </p>
+                        <p class="text-gray-600"><strong>Fecha de carga:</strong> {{ cliente.fecha_carga|date:"d M Y" }}</p>
+                        {% if cliente.usuario %}
+                            <p class="text-gray-600"><strong>Cargado por:</strong> {{ cliente.usuario.username }}</p>
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li class="italic text-gray-500">No hay clientes cargados aún.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal para agregar cliente -->
+    <div id="newsModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Agregar Nuevo Cliente</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="nombre" class="block text-sm font-semibold text-gray-700">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.nombre.value }}">
+                </div>
+                <div class="mb-4">
+                    <label for="cedula" class="block text-sm font-semibold text-gray-700">Cédula</label>
+                    <input type="text" name="cedula" id="cedula" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.cedula.value }}">
+                </div>
+                <div class="mb-4">
+                    <label for="telefono" class="block text-sm font-semibold text-gray-700">Teléfono</label>
+                    <input type="text" name="telefono" id="telefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.telefono.value }}">
+                </div>
+                <div class="mb-4">
+                    <button type="submit" class="w-full px-6 py-3 bg-green-500 text-white rounded-lg text-lg font-semibold hover:bg-green-600 transition">Agregar Cliente</button>
+                </div>
+            </form>
+            <button id="closeModalBtn" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+        </div>
+    </div>
+
+    <!-- Script para controlar la apertura y cierre del modal -->
+    <script>
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modal = document.getElementById('newsModal');
+
+        openModalBtn.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Cliente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-3xl font-bold mb-6">Detalle del Cliente</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-800">
+            <p><strong>CUENRO A:</strong> {{ cliente.cuenro_a }}</p>
+            <p><strong>Cédula:</strong> {{ cliente.cliced_a }}</p>
+            <p><strong>Rescierre:</strong> {{ cliente.rescierre }}</p>
+            <p><strong>Resvto:</strong> {{ cliente.resvto }}</p>
+            <p><strong>Cliente desde:</strong> {{ cliente.cliente_desde }}</p>
+            <p><strong>Tarven:</strong> {{ cliente.tarven }}</p>
+            <p><strong>Apellido 1:</strong> {{ cliente.cliapeuno }}</p>
+            <p><strong>Apellido 2:</strong> {{ cliente.cliapedos }}</p>
+            <p><strong>Nombre 1:</strong> {{ cliente.clinomuno }}</p>
+            <p><strong>Nombre 2:</strong> {{ cliente.clinomdos }}</p>
+            <p><strong>Teléfono fijo:</strong> {{ cliente.telt }}</p>
+            <p><strong>Celular 1:</strong> {{ cliente.cel1 }}</p>
+            <p><strong>Celular 2:</strong> {{ cliente.cel2 }}</p>
+            <p><strong>Teléfono BAU:</strong> {{ cliente.telbau }}</p>
+            <p><strong>Tel. Web:</strong> {{ cliente.telweb }}</p>
+            <p><strong>Cel. Web:</strong> {{ cliente.celweb }}</p>
+            <p><strong>Surco Vida:</strong> {{ cliente.surco_vida }}</p>
+            <p><strong>Surco Hogar:</strong> {{ cliente.surco_hogar }}</p>
+            <p><strong>Hasta:</strong> {{ cliente.hasta }}</p>
+            <p><strong>Fecha de carga:</strong> {{ cliente.fecha_carga }}</p>
+            <p><strong>Usuario que cargó:</strong> {{ cliente.usuario.username }}</p>
+        </div>
+
+        <a href="{% url 'home' %}" class="mt-6 inline-block text-blue-600 hover:underline">← Volver al listado</a>
+    </div>
+
+    <!-- Lista de gestiones -->
+    <div class="max-w-4xl mx-auto bg-white mt-10 p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">Gestiones registradas</h2>
+
+        {% if gestiones %}
+            <ul class="space-y-4">
+                {% for gestion in gestiones %}
+                    <li class="bg-gray-50 p-4 rounded border">
+                        <p><strong>Resultado:</strong> {{ gestion.get_resultado_display }}</p>
+                        <p><strong>Comentario:</strong> {{ gestion.comentario|default:"Sin comentario" }}</p>
+                        <p class="text-sm text-gray-500">Fecha: {{ gestion.fecha|date:"d M Y H:i" }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="italic text-gray-500">No hay gestiones registradas aún.</p>
+        {% endif %}
+    </div>
+
+    <!-- Formulario para nueva gestión -->
+    <div class="max-w-4xl mx-auto bg-white mt-10 p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-2">Agregar nueva gestión</h2>
+
+      <form method="post" class="space-y-4">
+    {% csrf_token %}
+    <div>
+        {{ form.resultado.label_tag }}
+        {{ form.resultado }}
+    </div>
+    <div>
+        {{ form.comentario.label_tag }}
+        {{ form.comentario }}
+    </div>
+    <!-- Campo dinámico solo si resultado es "venta" -->
+    <div id="surco-container" class="hidden">
+        <label for="surco-opcion" class="block text-sm font-semibold">Asignar surco:</label>
+        {{ form.surco_opcion }}
+    </div>
+    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+        Guardar gestión
+    </button>
+</form>
+<script>
+        const resultadoSelect = document.getElementById('resultado-select');
+        const surcoContainer = document.getElementById('surco-container');
+
+        function toggleSurco() {
+            if (resultadoSelect.value === 'venta') {
+                surcoContainer.classList.remove('hidden');
+            } else {
+                surcoContainer.classList.add('hidden');
+            }
+        }
+
+        resultadoSelect.addEventListener('change', toggleSurco);
+        window.addEventListener('DOMContentLoaded', toggleSurco);
+    </script>
+</body>
+</html>

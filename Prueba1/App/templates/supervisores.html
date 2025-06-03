@@ -1,0 +1,162 @@
+{% block title %}Verificar{% endblock %}
+
+{% block content %}
+
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.5);
+  }
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 95%;
+    height: 90%;
+    box-shadow: 0 4px 6px rgba(0,0,0,.1);
+    overflow-y: auto;
+    margin-top: 20px;
+  }
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .card img {
+    display: block;
+    margin: 10px auto 0;
+    width: 80%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .card {
+    margin: 10px;
+    text-align: center;
+    cursor: pointer;
+    width: 25%;
+  }
+  .card:hover {
+    transform: scale(1.05);
+  }
+</style>
+
+<hr class="mt-3 mb-4 wider-line">
+
+<!-- Contenedor principal para las tarjetas -->
+<div class="container">
+  <!-- Fila 1 con 4 tarjetas -->
+  <div class="d-flex justify-content-start mb-4">
+    <div class="card" onclick="openModal('modal1', 'iframe1', 'https://lookerstudio.google.com/embed/reporting/a2cfd364-fde4-4902-902d-a1cddb5d6745/page/6zXD')">
+      <img src="https://play-lh.googleusercontent.com/lEHoMZRVQkUJynaNLUmG2f6cxHpL7I03afYruxq-wR35JdC7bkf3lvCesynZk3LWcw" alt="Imagen 1">
+      <p>Reporte Automatismos</p>
+    </div>
+    <div class="card" onclick="openModal('modal2', 'iframe2', 'https://lookerstudio.google.com/embed/reporting/ddb18bb6-f584-435b-adaf-7f0ec634af11/page/6zXD')">
+      <img src="https://play-lh.googleusercontent.com/lEHoMZRVQkUJynaNLUmG2f6cxHpL7I03afYruxq-wR35JdC7bkf3lvCesynZk3LWcw" alt="Imagen 2">
+      <p>Reporte Incidencias</p>
+    </div>
+    <div class="card" onclick="openModal('modal3', 'iframe3', 'https://lookerstudio.google.com/embed/reporting/4535acf1-4c8d-4646-b343-16cabaf5add4/page/6zXD')">
+      <img src="https://play-lh.googleusercontent.com/lEHoMZRVQkUJynaNLUmG2f6cxHpL7I03afYruxq-wR35JdC7bkf3lvCesynZk3LWcw" alt="Imagen 3">
+      <p>Reporte Trabajo en Sala</p>
+    </div>
+    <div class="card" onclick="openModal('modal4', 'iframe4', 'https://app.powerbi.com/view?r=eyJrIjoiODkwNzlkY2UtYjA1Zi00YzZkLWJhZDQtNTY5MjdkM2Q4YjBmIiwidCI6IjIxYmQyYjA1LTExMjMtNDI2Mi04MDA3LWJhMjE1OThiMzg4OSJ9')">
+      <img src="https://images.datacamp.com/image/upload/v1724169856/image_ff55d03003.png" alt="Imagen 4">
+      <p>Reporte de Pagos</p>
+    </div>
+  </div>
+  <!-- Fila 2 con tarjeta adicional alineada a la izquierda -->
+  <div class="d-flex justify-content-start">
+    <div class="card" onclick="openModal('modal5', 'iframe5', 'https://lookerstudio.google.com/reporting/0885f4b2-9f68-41cc-90b2-cdc44486cf4c/page/BH2hE/edit')">
+      <img src="https://play-lh.googleusercontent.com/lEHoMZRVQkUJynaNLUmG2f6cxHpL7I03afYruxq-wR35JdC7bkf3lvCesynZk3LWcw" alt="Imagen 5">
+      <p>Reporte de Agentes</p>
+    </div>
+  </div>
+</div>
+<!-- Modales -->
+<div id="modal1" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal1', 'iframe1')">&times;</span>
+    <iframe id="iframe1" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
+  </div>
+</div>
+
+<div id="modal2" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal2', 'iframe2')">&times;</span>
+    <iframe id="iframe2" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
+  </div>
+</div>
+
+<div id="modal3" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal3', 'iframe3')">&times;</span>
+    <iframe id="iframe3" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
+  </div>
+</div>
+
+<div id="modal4" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal4', 'iframe4')">&times;</span>
+    <iframe id="iframe4" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
+  </div>
+</div>
+
+
+<div id="modal5" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal5', 'iframe5')">&times;</span>
+    <iframe id="iframe5" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
+  </div>
+</div>
+
+<div id="modal6" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal5', 'iframe5')">&times;</span>
+    <iframe id="iframe6" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
+  </div>
+</div>
+
+
+
+<script>
+function openModal(modalId, iframeId, iframeSrc) {
+  const modal = document.getElementById(modalId);
+  const iframe = document.getElementById(iframeId);
+  iframe.src = iframeSrc; // Establece la URL del iframe al abrir el modal
+  modal.style.display = "block";
+  document.body.style.overflow = "hidden"; // Desactiva el scroll del body
+}
+
+function closeModal(modalId, iframeId) {
+  const modal = document.getElementById(modalId);
+  const iframe = document.getElementById(iframeId);
+  iframe.src = ""; // Limpia la URL del iframe al cerrar el modal
+  modal.style.display = "none";
+  document.body.style.overflow = "auto"; // Restaura el scroll del body
+}
+
+window.onclick = function(event) {
+  if (event.target.classList.contains('modal')) {
+    const modalId = event.target.id;
+    const iframeId = `iframe${modalId.slice(-1)}`; // Detecta el ID del iframe basado en el modal
+    closeModal(modalId, iframeId);
+  }
+}
+</script>
+
+{% endblock %}
