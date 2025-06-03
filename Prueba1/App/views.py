@@ -6,10 +6,20 @@ from .models import Cliente, RolUsuario
 from .forms import ClienteForm,GestionForm
 from django.shortcuts import render, get_object_or_404
 
+
 @login_required
 def home(request):
-    # FILTRA solo los clientes del usuario autenticado
     clientes = Cliente.objects.filter(usuario=request.user).order_by('-fecha_carga')
+
+    # Filtro por resultado reciente si se envía
+    filtro_resultado = request.GET.get('resultado')
+    if filtro_resultado:
+        clientes = [c for c in clientes if c.gestiones.order_by('-fecha').first() and c.gestiones.order_by('-fecha').first().resultado == filtro_resultado]
+
+    # Agregar el último resultado como atributo temporal
+    for cliente in clientes:
+        ultima_gestion = cliente.gestiones.order_by('-fecha').first()
+        cliente.ultimo_resultado = ultima_gestion.resultado if ultima_gestion else "Sin gestión"
 
     rol_usuario = None
     try:
@@ -17,20 +27,13 @@ def home(request):
     except RolUsuario.DoesNotExist:
         pass
 
-    if request.method == 'POST':
-        form = ClienteForm(request.POST)
-        if form.is_valid():
-            cliente = form.save(commit=False)
-            cliente.usuario = request.user
-            cliente.save()
-            return redirect('home')
-    else:
-        form = ClienteForm()
+    form = ClienteForm()
 
     return render(request, 'home.html', {
         'clientes': clientes,
         'form': form,
-        'rol_usuario': rol_usuario
+        'rol_usuario': rol_usuario,
+        'filtro_resultado': filtro_resultado
     })
 
 
