@@ -1,162 +1,155 @@
-{% block title %}Verificar{% endblock %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Clientes - Página de Inicio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
 
-{% block content %}
-
-<style>
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 100;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: rgba(0,0,0,0.5);
-  }
-  .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 95%;
-    height: 90%;
-    box-shadow: 0 4px 6px rgba(0,0,0,.1);
-    overflow-y: auto;
-    margin-top: 20px;
-  }
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-  }
-  .close:hover,
-  .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .card img {
-    display: block;
-    margin: 10px auto 0;
-    width: 80%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  .card {
-    margin: 10px;
-    text-align: center;
-    cursor: pointer;
-    width: 25%;
-  }
-  .card:hover {
-    transform: scale(1.05);
-  }
-</style>
-
-<hr class="mt-3 mb-4 wider-line">
-
-<!-- Contenedor principal para las tarjetas -->
-<div class="container">
-  <!-- Fila 1 con 4 tarjetas -->
-  <div class="d-flex justify-content-start mb-4">
-    <div class="card" onclick="openModal('modal1', 'iframe1', 'https://lookerstudio.google.com/embed/reporting/a2cfd364-fde4-4902-902d-a1cddb5d6745/page/6zXD')">
-      <img src="https://play-lh.googleusercontent.com/lEHoMZRVQkUJynaNLUmG2f6cxHpL7I03afYruxq-wR35JdC7bkf3lvCesynZk3LWcw" alt="Imagen 1">
-      <p>Reporte Automatismos</p>
+<div class="container mx-auto px-4 py-6">
+    <!-- Sección de bienvenida -->
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+        <h1 class="text-3xl font-semibold text-gray-800 mb-4">¡Bienvenido al Gestor de Clientes!</h1>
+        <a href="{% url 'salir' %}" class="inline-block px-6 py-3 bg-red-500 text-white rounded-lg text-lg font-semibold hover:bg-red-600 transition">Cerrar sesión</a>
     </div>
-    <div class="card" onclick="openModal('modal2', 'iframe2', 'https://lookerstudio.google.com/embed/reporting/ddb18bb6-f584-435b-adaf-7f0ec634af11/page/6zXD')">
-      <img src="https://play-lh.googleusercontent.com/lEHoMZRVQkUJynaNLUmG2f6cxHpL7I03afYruxq-wR35JdC7bkf3lvCesynZk3LWcw" alt="Imagen 2">
-      <p>Reporte Incidencias</p>
+
+    <!-- Botón para abrir el modal -->
+    <div class="mb-6">
+        <button id="openModalBtn" class="px-6 py-3 bg-green-500 text-white rounded-lg text-lg font-semibold hover:bg-green-600 transition">Agregar Nuevo Cliente</button>
     </div>
-    <div class="card" onclick="openModal('modal3', 'iframe3', 'https://lookerstudio.google.com/embed/reporting/4535acf1-4c8d-4646-b343-16cabaf5add4/page/6zXD')">
-      <img src="https://play-lh.googleusercontent.com/lEHoMZRVQkUJynaNLUmG2f6cxHpL7I03afYruxq-wR35JdC7bkf3lvCesynZk3LWcw" alt="Imagen 3">
-      <p>Reporte Trabajo en Sala</p>
+
+    <!-- Filtro por resultado reciente y agente -->
+<form method="get" class="mb-6 flex flex-wrap items-center gap-4">
+    <div>
+        <label for="resultado" class="mr-2 font-semibold text-sm">Filtrar por resultado:</label>
+        <select name="resultado" id="resultado" class="border px-2 py-1 rounded">
+            <option value="">-- Todos --</option>
+            <option value="venta" {% if filtro_resultado == "venta" %}selected{% endif %}>Venta</option>
+            <option value="rechazo" {% if filtro_resultado == "rechazo" %}selected{% endif %}>Rechazo</option>
+            <option value="pendiente" {% if filtro_resultado == "pendiente" %}selected{% endif %}>Pendiente</option>
+            <option value="rellamar" {% if filtro_resultado == "rellamar" %}selected{% endif %}>Rellamar</option>
+            <option value="llamar_mañana" {% if filtro_resultado == "llamar_mañana" %}selected{% endif %}>Llamar mañana</option>
+            <option value="llamar_tarde" {% if filtro_resultado == "llamar_tarde" %}selected{% endif %}>Llamar tarde</option>
+            <option value="llamar_sabado" {% if filtro_resultado == "llamar_sabado" %}selected{% endif %}>Llamar sábado</option>
+            <option value="no_target" {% if filtro_resultado == "no_target" %}selected{% endif %}>No target</option>
+            <option value="dato_erroneo" {% if filtro_resultado == "dato_erroneo" %}selected{% endif %}>Dato erróneo</option>
+            <option value="Sin gestión" {% if filtro_resultado == "Sin gestión" %}selected{% endif %}>Sin gestión</option>
+        </select>
     </div>
-    <div class="card" onclick="openModal('modal4', 'iframe4', 'https://app.powerbi.com/view?r=eyJrIjoiODkwNzlkY2UtYjA1Zi00YzZkLWJhZDQtNTY5MjdkM2Q4YjBmIiwidCI6IjIxYmQyYjA1LTExMjMtNDI2Mi04MDA3LWJhMjE1OThiMzg4OSJ9')">
-      <img src="https://images.datacamp.com/image/upload/v1724169856/image_ff55d03003.png" alt="Imagen 4">
-      <p>Reporte de Pagos</p>
+
+    <div>
+        <label for="agente" class="mr-2 font-semibold text-sm">Filtrar por agente:</label>
+        <select name="agente" id="agente" class="border px-2 py-1 rounded">
+            <option value="">-- Todos --</option>
+            {% for agente in agentes %}
+                <option value="{{ agente.id }}" {% if filtro_agente == agente.id|stringformat:"s" %}selected{% endif %}>
+                    {{ agente.username }}
+                </option>
+            {% endfor %}
+        </select>
     </div>
-  </div>
-  <!-- Fila 2 con tarjeta adicional alineada a la izquierda -->
-  <div class="d-flex justify-content-start">
-    <div class="card" onclick="openModal('modal5', 'iframe5', 'https://lookerstudio.google.com/reporting/0885f4b2-9f68-41cc-90b2-cdc44486cf4c/page/BH2hE/edit')">
-      <img src="https://play-lh.googleusercontent.com/lEHoMZRVQkUJynaNLUmG2f6cxHpL7I03afYruxq-wR35JdC7bkf3lvCesynZk3LWcw" alt="Imagen 5">
-      <p>Reporte de Agentes</p>
+
+    <div>
+        <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Filtrar</button>
     </div>
-  </div>
+</form>
+
+    <!-- Lista de clientes con scroll interno -->
+    <div class="bg-white p-6 rounded-lg shadow-lg max-h-[600px] overflow-y-auto">
+        <h2 class="text-2xl font-semibold text-gray-800 border-b-2 pb-4 mb-6">Lista de Clientes</h2>
+        <ul>
+            {% for cliente in clientes %}
+                <li class="bg-gray-50 p-4 mb-4 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105">
+                    <a href="{% url 'detalle_cliente' cliente.id %}" class="text-blue-600 hover:underline">
+                        {{ cliente.cliapeuno }} {{ cliente.clinomuno }}
+                    </a>
+                    <p class="text-gray-600"><strong>Cédula:</strong> {{ cliente.cliced_a }}</p>
+                    <p class="text-gray-600"><strong>Teléfono:</strong>
+                        {% if cliente.telt and cliente.telt != '0' and cliente.cel1 and cliente.cel1 != '0' %}
+                            {{ cliente.telt }} {{ cliente.cel1 }}
+                        {% elif cliente.telt and cliente.telt != '0' %}
+                            {{ cliente.telt }}
+                        {% elif cliente.cel1 and cliente.cel1 != '0' %}
+                            {{ cliente.cel1 }}
+                        {% else %}
+                            No disponible
+                        {% endif %}
+                    </p>
+                    <p class="text-gray-600"><strong>Cliente desde:</strong> {{ cliente.cliente_desde|date:"d M Y" }}</p>
+                    <p class="text-gray-600"><strong>Resultado reciente:</strong> {{ cliente.ultimo_resultado|capfirst }}</p>
+                </li>
+            {% empty %}
+                <li class="italic text-gray-500">No hay clientes cargados aún.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Paginación -->
+    {% if clientes.has_other_pages %}
+    <div class="mt-6 flex justify-center space-x-2">
+        {% if clientes.has_previous %}
+            <a href="?page={{ clientes.previous_page_number }}{% if filtro_resultado %}&resultado={{ filtro_resultado }}{% endif %}"
+               class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Anterior</a>
+        {% endif %}
+        <span class="px-4 py-2 bg-white border rounded shadow">{{ clientes.number }} / {{ clientes.paginator.num_pages }}</span>
+        {% if clientes.has_next %}
+            <a href="?page={{ clientes.next_page_number }}{% if filtro_resultado %}&resultado={{ filtro_resultado }}{% endif %}"
+               class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Siguiente</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
 </div>
-<!-- Modales -->
-<div id="modal1" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal1', 'iframe1')">&times;</span>
-    <iframe id="iframe1" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
-  </div>
+
+<!-- Modal para agregar cliente -->
+<div id="newsModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Agregar Nuevo Cliente</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="nombre" class="block text-sm font-semibold text-gray-700">Nombre</label>
+                <input type="text" name="nombre" id="nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.nombre.value }}">
+            </div>
+            <div class="mb-4">
+                <label for="cedula" class="block text-sm font-semibold text-gray-700">Cédula</label>
+                <input type="text" name="cedula" id="cedula" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.cedula.value }}">
+            </div>
+            <div class="mb-4">
+                <label for="telefono" class="block text-sm font-semibold text-gray-700">Teléfono</label>
+                <input type="text" name="telefono" id="telefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.telefono.value }}">
+            </div>
+            <div class="mb-4">
+                <button type="submit" class="w-full px-6 py-3 bg-green-500 text-white rounded-lg text-lg font-semibold hover:bg-green-600 transition">Agregar Cliente</button>
+            </div>
+        </form>
+        <button id="closeModalBtn" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+    </div>
 </div>
 
-<div id="modal2" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal2', 'iframe2')">&times;</span>
-    <iframe id="iframe2" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
-  </div>
-</div>
-
-<div id="modal3" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal3', 'iframe3')">&times;</span>
-    <iframe id="iframe3" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
-  </div>
-</div>
-
-<div id="modal4" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal4', 'iframe4')">&times;</span>
-    <iframe id="iframe4" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
-  </div>
-</div>
-
-
-<div id="modal5" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal5', 'iframe5')">&times;</span>
-    <iframe id="iframe5" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
-  </div>
-</div>
-
-<div id="modal6" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('modal5', 'iframe5')">&times;</span>
-    <iframe id="iframe6" style="width:100%; height:100%;" frameborder="0" scrolling="yes"></iframe>
-  </div>
-</div>
-
-
-
+<!-- Script para controlar la apertura y cierre del modal -->
 <script>
-function openModal(modalId, iframeId, iframeSrc) {
-  const modal = document.getElementById(modalId);
-  const iframe = document.getElementById(iframeId);
-  iframe.src = iframeSrc; // Establece la URL del iframe al abrir el modal
-  modal.style.display = "block";
-  document.body.style.overflow = "hidden"; // Desactiva el scroll del body
-}
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modal = document.getElementById('newsModal');
 
-function closeModal(modalId, iframeId) {
-  const modal = document.getElementById(modalId);
-  const iframe = document.getElementById(iframeId);
-  iframe.src = ""; // Limpia la URL del iframe al cerrar el modal
-  modal.style.display = "none";
-  document.body.style.overflow = "auto"; // Restaura el scroll del body
-}
+    openModalBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
 
-window.onclick = function(event) {
-  if (event.target.classList.contains('modal')) {
-    const modalId = event.target.id;
-    const iframeId = `iframe${modalId.slice(-1)}`; // Detecta el ID del iframe basado en el modal
-    closeModal(modalId, iframeId);
-  }
-}
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
 </script>
 
-{% endblock %}
+</body>
+</html>

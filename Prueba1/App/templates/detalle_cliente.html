@@ -1,97 +1,381 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Detalle de Cliente</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <title>Detalle del Cliente</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function calcularEdad() {
+      const nacimiento = document.getElementById("clifecnac").value;
+      if (!nacimiento) return;
+      const fechaNac = new Date(nacimiento);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - fechaNac.getFullYear();
+      const m = hoy.getMonth() - fechaNac.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < fechaNac.getDate())) edad--;
+      document.getElementById("edad").value = edad;
+    }
+  </script>
 </head>
 <body class="bg-gray-100 p-6">
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-        <h1 class="text-3xl font-bold mb-6">Detalle del Cliente</h1>
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-6">Detalle del Cliente</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-800">
-            <p><strong>CUENRO A:</strong> {{ cliente.cuenro_a }}</p>
-            <p><strong>Cédula:</strong> {{ cliente.cliced_a }}</p>
-            <p><strong>Rescierre:</strong> {{ cliente.rescierre }}</p>
-            <p><strong>Resvto:</strong> {{ cliente.resvto }}</p>
-            <p><strong>Cliente desde:</strong> {{ cliente.cliente_desde }}</p>
-            <p><strong>Tarven:</strong> {{ cliente.tarven }}</p>
-            <p><strong>Apellido 1:</strong> {{ cliente.cliapeuno }}</p>
-            <p><strong>Apellido 2:</strong> {{ cliente.cliapedos }}</p>
-            <p><strong>Nombre 1:</strong> {{ cliente.clinomuno }}</p>
-            <p><strong>Nombre 2:</strong> {{ cliente.clinomdos }}</p>
-            <p><strong>Teléfono fijo:</strong> {{ cliente.telt }}</p>
-            <p><strong>Celular 1:</strong> {{ cliente.cel1 }}</p>
-            <p><strong>Celular 2:</strong> {{ cliente.cel2 }}</p>
-            <p><strong>Teléfono BAU:</strong> {{ cliente.telbau }}</p>
-            <p><strong>Tel. Web:</strong> {{ cliente.telweb }}</p>
-            <p><strong>Cel. Web:</strong> {{ cliente.celweb }}</p>
-            <p><strong>Surco Vida:</strong> {{ cliente.surco_vida }}</p>
-            <p><strong>Surco Hogar:</strong> {{ cliente.surco_hogar }}</p>
-            <p><strong>Hasta:</strong> {{ cliente.hasta }}</p>
-            <p><strong>Fecha de carga:</strong> {{ cliente.fecha_carga }}</p>
-            <p><strong>Usuario que cargó:</strong> {{ cliente.usuario.username }}</p>
-        </div>
-
-        <a href="{% url 'home' %}" class="mt-6 inline-block text-blue-600 hover:underline">← Volver al listado</a>
-    </div>
-
-    <!-- Lista de gestiones -->
-    <div class="max-w-4xl mx-auto bg-white mt-10 p-6 rounded shadow">
-        <h2 class="text-2xl font-semibold mb-4">Gestiones registradas</h2>
-
-        {% if gestiones %}
-            <ul class="space-y-4">
-                {% for gestion in gestiones %}
-                    <li class="bg-gray-50 p-4 rounded border">
-                        <p><strong>Resultado:</strong> {{ gestion.get_resultado_display }}</p>
-                        <p><strong>Comentario:</strong> {{ gestion.comentario|default:"Sin comentario" }}</p>
-                        <p class="text-sm text-gray-500">Fecha: {{ gestion.fecha|date:"d M Y H:i" }}</p>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="italic text-gray-500">No hay gestiones registradas aún.</p>
-        {% endif %}
-    </div>
-
-    <!-- Formulario para nueva gestión -->
-    <div class="max-w-4xl mx-auto bg-white mt-10 p-6 rounded shadow">
-        <h2 class="text-xl font-semibold mb-2">Agregar nueva gestión</h2>
-
-      <form method="post" class="space-y-4">
+        <form method="post" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-800">
     {% csrf_token %}
-    <div>
-        {{ form.resultado.label_tag }}
-        {{ form.resultado }}
+
+    <label><strong>Cédula:</strong><input type="text" name="cliced_a" value="{{ cliente.cliced_a }}" class="border p-1 w-full" /></label>
+    <label><strong>Rescierre:</strong>
+        <input type="text" name="rescierre" value="{{ cliente.rescierre }}" class="border p-1 w-full bg-gray-100" readonly />
+    </label>
+
+    <label><strong>Resvto:</strong>
+    <input type="text" name="resvto" value="{{ cliente.resvto }}" class="border p-1 w-full bg-gray-100" readonly />
+    </label>
+
+    <p><strong>Cliente desde:</strong> <input type="text" readonly value="{{ cliente.cliente_desde }}" class="border p-1 w-full bg-gray-100" /></p>
+    <label><strong>Tarven:</strong><input type="text" name="tarven" value="{{ cliente.tarven }}" class="border p-1 w-full" /></label>
+
+    <label><strong>Apellido 1:</strong><input type="text" name="cliapeuno" value="{{ cliente.cliapeuno }}" class="border p-1 w-full" /></label>
+    <label><strong>Apellido 2:</strong><input type="text" name="cliapedos" value="{{ cliente.cliapedos }}" class="border p-1 w-full" /></label>
+    <label><strong>Nombre 1:</strong><input type="text" name="clinomuno" value="{{ cliente.clinomuno }}" class="border p-1 w-full" /></label>
+    <label><strong>Nombre 2:</strong><input type="text" name="clinomdos" value="{{ cliente.clinomdos }}" class="border p-1 w-full" /></label>
+
+    <label><strong>Fecha nacimiento:</strong>
+        <input type="date" name="clifecnac" id="clifecnac" value="{{ cliente.clifecnac }}" onchange="calcularEdad()" class="border p-1 w-full" />
+    </label>
+    <label><strong>Edad:</strong>
+        <input type="number" id="edad" value="{{ cliente.edad }}" readonly class="border p-1 w-full bg-gray-100" />
+    </label>
+
+    <label><strong>Localidad:</strong><input type="text" name="loc" value="{{ cliente.loc }}" class="border p-1 w-full" /></label>
+    <label><strong>Departamento:</strong><input type="text" name="dpto" value="{{ cliente.dpto }}" class="border p-1 w-full" /></label>
+    <label><strong>Calle:</strong><input type="text" name="clical" value="{{ cliente.clical }}" class="border p-1 w-full" /></label>
+    <label><strong>Número de puerta:</strong><input type="text" name="clindp" value="{{ cliente.clindp }}" class="border p-1 w-full" /></label>
+    <label><strong>Bis:</strong><input type="text" name="clibis" value="{{ cliente.clibis }}" class="border p-1 w-full" /></label>
+    <label><strong>RUT:</strong><input type="text" name="clirut" value="{{ cliente.clirut }}" class="border p-1 w-full" /></label>
+    <label><strong>Kms:</strong><input type="text" name="clikms" value="{{ cliente.clikms }}" class="border p-1 w-full" /></label>
+    <label><strong>Paso:</strong><input type="text" name="clipas" value="{{ cliente.clipas }}" class="border p-1 w-full" /></label>
+    <label><strong>Bloque:</strong><input type="text" name="cliblo" value="{{ cliente.cliblo }}" class="border p-1 w-full" /></label>
+    <label><strong>Torre:</strong><input type="text" name="clitor" value="{{ cliente.clitor }}" class="border p-1 w-full" /></label>
+    <label><strong>Apartamento:</strong><input type="text" name="cliapt" value="{{ cliente.cliapt }}" class="border p-1 w-full" /></label>
+    <label><strong>Manzana:</strong><input type="text" name="climan" value="{{ cliente.climan }}" class="border p-1 w-full" /></label>
+
+    <label><strong>Tel. particular:</strong><input type="text" name="telp" value="{{ cliente.telp }}" class="border p-1 w-full" /></label>
+    <label><strong>Tel. fijo:</strong><input type="text" name="telt" value="{{ cliente.telt }}" class="border p-1 w-full" /></label>
+    <label><strong>Celular 1:</strong><input type="text" name="cel1" value="{{ cliente.cel1 }}" class="border p-1 w-full" /></label>
+    <label><strong>Celular 2:</strong><input type="text" name="cel2" value="{{ cliente.cel2 }}" class="border p-1 w-full" /></label>
+    <label><strong>Teléfono BAU:</strong><input type="text" name="telbau" value="{{ cliente.telbau }}" class="border p-1 w-full" /></label>
+    <label><strong>Tel. Web:</strong><input type="text" name="telweb" value="{{ cliente.telweb }}" class="border p-1 w-full" /></label>
+    <label><strong>Cel. Web:</strong><input type="text" name="celweb" value="{{ cliente.celweb }}" class="border p-1 w-full" /></label>
+    <label><strong>Email:</strong>
+        <input type="email" name="email" value="{{ cliente.email }}" class="border p-1 w-full" />
+    </label>
+
+    <label><strong>Género:</strong>
+    <select name="genero" class="border p-1 w-full">
+        <option value="Masculino" {% if cliente.genero == "Masculino" %}selected{% endif %}>Masculino</option>
+        <option value="Femenino" {% if cliente.genero == "Femenino" %}selected{% endif %}>Femenino</option>
+    </select>
+    </label>
+    <label><strong>Surco Vida:</strong>
+        <select name="surco_vida" class="border p-1 w-full">
+        <option value="Sí" {% if cliente.surco_vida == "Sí" %}selected{% endif %}>Sí</option>
+        <option value="No" {% if cliente.surco_vida == "No" %}selected{% endif %}>No</option>
+        </select>
+    </label>
+    <label><strong>Surco Hogar:</strong>
+        <select name="surco_hogar" class="border p-1 w-full">
+        <option value="Sí" {% if cliente.surco_hogar == "Sí" %}selected{% endif %}>Sí</option>
+        <option value="No" {% if cliente.surco_hogar == "No" %}selected{% endif %}>No</option>
+        </select>
+    </label>
+
+    <p><strong>Hasta:</strong> <input type="text" readonly value="{{ cliente.hasta }}" class="border p-1 w-full bg-gray-100" /></p>
+    <p><strong>Fecha de carga:</strong> <input type="text" readonly value="{{ cliente.fecha_carga }}" class="border p-1 w-full bg-gray-100" /></p>
+    <p><strong>Usuario que cargó:</strong> <input type="text" readonly value="{{ cliente.usuario.username }}" class="border p-1 w-full bg-gray-100" /></p>
+
+    <div class="col-span-3 mt-6">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Guardar cambios</button>
+        <a href="{% url 'home' %}" class="ml-4 text-blue-600 hover:underline">← Volver al inicio</a>
     </div>
-    <div>
-        {{ form.comentario.label_tag }}
-        {{ form.comentario }}
+    </form>
+        <hr class="my-6" />
+    <h2 class="text-2xl font-bold mb-4">Historial de gestiones</h2>
+<div class="overflow-x-auto w-full">
+    <table class="w-full text-sm border">
+      <thead class="bg-gray-200">
+          <tr>
+            <th class="p-2 border">Fecha</th>
+            <th class="p-2 border">Resultado</th>
+            <th class="p-2 border">Comentario</th>
+            <th class="p-2 border">Teléfono Venta</th>
+            <th class="p-2 border">Mes Pago</th>
+            <th class="p-2 border">Póliza</th>
+            <th class="p-2 border">Calle</th>
+            <th class="p-2 border">Número</th>
+            <th class="p-2 border">Apto</th>
+            <th class="p-2 border">Localidad</th>
+            <th class="p-2 border">Departamento</th>
+            <th class="p-2 border">Telefono</th>
+            <th class="p-2 border">Email Venta</th>
+            <th class="p-2 border">Seguridad</th>
+            <th class="p-2 border">Paredes</th>
+            <th class="p-2 border">Techo</th>
+            <th class="p-2 border">Inmueble</th>
+            <th class="p-2 border">Vivienda</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for gestion in gestiones %}
+           <tr class="hover:bg-gray-50">
+      <td class="p-2 border">{{ gestion.fecha|date:"d/m/Y H:i" }}</td>
+      <td class="p-2 border">{{ gestion.get_resultado_display }}</td>
+      <td class="p-2 border">{{ gestion.comentario }}</td>
+      <td class="p-2 border">{{ gestion.telefono_venta|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.mes_pago|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.poliza|default:"-" }}</td>
+      
+      <td class="p-2 border">{{ gestion.domicilio_calle|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.domicilio_numero|default:"-" }}</td>
+      <td class="p-2 border">
+        {% if gestion.domicilio_apto or gestion.domicilio_apto == "0" or gestion.domicilio_apto == 0 %}
+          {{ gestion.domicilio_apto }}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td class="p-2 border">{{ gestion.localidad|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.departamento|default:"-" }}</td>
+
+      <td class="p-2 border">{{ gestion.telefono|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.email_venta|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.seguridad|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.paredes|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.techo|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.inmueble|default:"-" }}</td>
+      <td class="p-2 border">{{ gestion.vivienda|default:"-" }}</td>
+    </tr>
+        {% empty %}
+           <tr>
+        <td colspan="18" class="text-center py-6 text-gray-500 italic bg-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline w-6 h-6 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h5l2 2h5a2 2 0 012 2v10a2 2 0 01-2 2z" />
+        </svg>
+        Este cliente aún no tiene gestiones registradas.
+      </td>
+    </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     </div>
-    <!-- Campo dinámico solo si resultado es "venta" -->
-    <div id="surco-container" class="hidden">
-        <label for="surco-opcion" class="block text-sm font-semibold">Asignar surco:</label>
-        {{ form.surco_opcion }}
+    <hr class="my-6" />
+<h2 class="text-2xl font-bold mb-4">Registrar nueva gestión</h2>
+
+<form method="post" action="{% url 'detalle_cliente' cliente.id %}" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-800">
+  {% csrf_token %}
+
+  <label><strong>Resultado:</strong>
+    <select name="resultado" id="id_resultado" class="border p-1 w-full" required>
+      <option value="">Seleccionar</option>
+      <option value="venta">Venta</option>
+      <option value="rechazo">Rechazo</option>
+      <option value="pendiente">Pendiente</option>
+      <option value="rellamar">Rellamar</option>
+      <option value="llamar_mañana">Llamar de mañana</option>
+      <option value="llamar_tarde">Llamar de tarde</option>
+      <option value="llamar_sabado">Llamar sábado</option>
+      <option value="no_target">No target</option>
+      <option value="dato_erroneo">Dato erróneo</option>
+    </select>
+  </label>
+
+  <label class="col-span-2"><strong>Comentario:</strong>
+    <textarea name="comentario" class="border p-1 w-full" rows="2"></textarea>
+  </label>
+
+
+  <!-- Selección del tipo de surco -->
+  <div id="selector-surco" class="col-span-3 hidden">
+    <strong>¿A qué producto aplica la venta?</strong>
+    <div class="flex gap-4 mt-2">
+      <label><input type="radio" name="surco_opcion" value="vida" class="mr-2"> Surco Vida</label>
+      <label><input type="radio" name="surco_opcion" value="hogar" class="mr-2"> Surco Hogar</label>
+      
     </div>
-    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-        Guardar gestión
-    </button>
+  </div>
+  
+
+  
+ <!-- Surco Vida -->
+<div id="form-surco-vida" class="col-span-3 hidden mt-2">
+<label><strong>Teléfono para la venta:</strong>
+  <select name="telefono_venta" class="border p-1 w-full">
+    {% if cliente.telp and cliente.telp|length > 3 and cliente.telp != "0" %}
+      <option value="{{ cliente.telp }}">{{ cliente.telp }}</option>
+    {% endif %}
+    {% if cliente.telt and cliente.telt|length > 3 and cliente.telt != "0" %}
+      <option value="{{ cliente.telt }}">{{ cliente.telt }}</option>
+    {% endif %}
+    {% if cliente.cel1 and cliente.cel1|length > 3 and cliente.cel1 != "0" %}
+      <option value="{{ cliente.cel1 }}">{{ cliente.cel1 }}</option>
+    {% endif %}
+    {% if cliente.cel2 and cliente.cel2|length > 3 and cliente.cel2 != "0" %}
+      <option value="{{ cliente.cel2 }}">{{ cliente.cel2 }}</option>
+    {% endif %}
+    {% if cliente.telbau and cliente.telbau|length > 3 and cliente.telbau != "0" %}
+      <option value="{{ cliente.telbau }}">{{ cliente.telbau }}</option>
+    {% endif %}
+    {% if cliente.telweb and cliente.telweb|length > 3 and cliente.telweb != "0" %}
+      <option value="{{ cliente.telweb }}">{{ cliente.telweb }}</option>
+    {% endif %}
+    {% if cliente.celweb and cliente.celweb|length > 3 and cliente.celweb != "0" %}
+      <option value="{{ cliente.celweb }}">{{ cliente.celweb }}</option>
+    {% endif %}
+  </select>
+</label>
+
+ <!-- Email para la venta -->
+  <label class="mt-2 block"><strong>Email para la venta:</strong>
+    <select name="email_venta" id="email-venta" class="border p-1 w-full">
+      {% for value, label in form.email_venta.field.choices %}
+        <option value="{{ value }}" {% if form.email_venta.value == value %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <!-- Mes de pago -->
+  <label class="mt-2 block"><strong>Mes de pago:</strong>
+    <input type="text" name="mes_pago" id="mes_pago" readonly class="border p-1 w-full bg-gray-100" />
+  </label>
+
+  <div id="campos-surco-vida"></div>
+</div>
+
+<!-- Surco Hogar -->
+<div id="form-surco-hogar" class="col-span-3 hidden mt-2">
+  
+  <!-- Teléfono para la venta -->
+  <label class="block mb-2"><strong>Teléfono para la venta:</strong>
+    <select name="telefono_venta" class="border p-1 w-full">
+      {% if cliente.telp and cliente.telp|length > 3 and cliente.telp != "0" %}
+        <option value="{{ cliente.telp }}">{{ cliente.telp }}</option>
+      {% endif %}
+      {% if cliente.telt and cliente.telt|length > 3 and cliente.telt != "0" %}
+        <option value="{{ cliente.telt }}">{{ cliente.telt }}</option>
+      {% endif %}
+      {% if cliente.cel1 and cliente.cel1|length > 3 and cliente.cel1 != "0" %}
+        <option value="{{ cliente.cel1 }}">{{ cliente.cel1 }}</option>
+      {% endif %}
+      {% if cliente.cel2 and cliente.cel2|length > 3 and cliente.cel2 != "0" %}
+        <option value="{{ cliente.cel2 }}">{{ cliente.cel2 }}</option>
+      {% endif %}
+      {% if cliente.telbau and cliente.telbau|length > 3 and cliente.telbau != "0" %}
+        <option value="{{ cliente.telbau }}">{{ cliente.telbau }}</option>
+      {% endif %}
+      {% if cliente.telweb and cliente.telweb|length > 3 and cliente.telweb != "0" %}
+        <option value="{{ cliente.telweb }}">{{ cliente.telweb }}</option>
+      {% endif %}
+      {% if cliente.celweb and cliente.celweb|length > 3 and cliente.celweb != "0" %}
+        <option value="{{ cliente.celweb }}">{{ cliente.celweb }}</option>
+      {% endif %}
+    </select>
+  </label>
+
+  <!-- Email para la venta -->
+<!-- Email para la venta -->
+<label class="block mb-2"><strong>Email para la venta:</strong>
+  <select name="email_venta" class="border p-1 w-full">
+    {% if cliente.email and cliente.email|length > 3 and cliente.email != "nan" %}
+      <option value="{{ cliente.email }}">{{ cliente.email }}</option>
+    {% else %}
+      <option value="">No disponible</option>
+    {% endif %}
+  </select>
+</label>
+
+
+<!-- Campos ocultos con valores fijos de Surco Hogar -->
+  {{ form.seguridad }}
+  {{ form.paredes }}
+  {{ form.techo }}
+  {{ form.inmueble }}
+  {{ form.vivienda }}
+
+  </div>
+
+<div class="col-span-3 mt-4">
+    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">Registrar gestión</button>
+  </div>
+  
 </form>
-<script>
-        const resultadoSelect = document.getElementById('resultado-select');
-        const surcoContainer = document.getElementById('surco-container');
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const resultadoSelect = document.getElementById("id_resultado");
+    const selectorSurco = document.getElementById("selector-surco");
+    const formVida = document.getElementById("form-surco-vida");
+    const formHogar = document.getElementById("form-surco-hogar");
 
-        function toggleSurco() {
-            if (resultadoSelect.value === 'venta') {
-                surcoContainer.classList.remove('hidden');
-            } else {
-                surcoContainer.classList.add('hidden');
-            }
-        }
+    function toggleSurcos() {
+      const resultado = resultadoSelect.value;
+      if (resultado === "venta") {
+        selectorSurco.classList.remove("hidden");
+      } else {
+        selectorSurco.classList.add("hidden");
+        formVida.classList.add("hidden");
+        formHogar.classList.add("hidden");
+      }
+    }
 
-        resultadoSelect.addEventListener('change', toggleSurco);
-        window.addEventListener('DOMContentLoaded', toggleSurco);
-    </script>
+   function mostrarSurco() {
+  const tipo = document.querySelector('input[name="surco_opcion"]:checked')?.value;
+  const formVida = document.getElementById("form-surco-vida");
+  const formHogar = document.getElementById("form-surco-hogar");
+  const mesPagoInput = document.getElementById("mes_pago");
+  const camposSurcoVida = document.getElementById("campos-surco-vida");
+
+  formVida.classList.add("hidden");
+  formHogar.classList.add("hidden");
+  camposSurcoVida.innerHTML = "";
+
+  if (tipo === "vida") {
+    formVida.classList.remove("hidden");
+
+    if (mesPagoInput) {
+      const hoy = new Date();
+      hoy.setMonth(hoy.getMonth() + 1);
+      const nombreMes = hoy.toLocaleString('es-ES', { month: 'long' });
+      mesPagoInput.value = `${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)}`;
+    }
+
+    camposSurcoVida.innerHTML = `
+      <input type="hidden" name="poliza" value="110316" />
+      <input type="hidden" name="domicilio_calle" value="ITUZAINGÓ" />
+      <input type="hidden" name="domicilio_numero" value="1315" />
+      <input type="hidden" name="domicilio_apto" value="0" />
+      <input type="hidden" name="departamento" value="MONTEVIDEO" />
+      <input type="hidden" name="localidad" value="MONTEVIDEO" />
+      <input type="hidden" name="telefono" value="18918" />
+    `;
+  } else if (tipo === "hogar") {
+    formHogar.classList.remove("hidden");
+    // asegurarse de no dejar el mes_pago relleno si no es surco vida
+    if (mesPagoInput) {
+      mesPagoInput.value = "";
+    }
+  }
+}
+
+    resultadoSelect.addEventListener("change", toggleSurcos);
+    document.querySelectorAll('input[name="surco_opcion"]').forEach(radio => {
+      radio.addEventListener("change", mostrarSurco);
+    });
+
+    toggleSurcos();
+  });
+</script>
+  
 </body>
 </html>
